@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kicks/screens/signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -26,99 +27,110 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Image.asset("assets/images/logo.png", 
-                width: 160,
-                height: 160),
+                Image.asset("assets/images/logo.png", width: 160, height: 160),
+                SizedBox(height: 16),
 
-
-                SizedBox(height: 16,),
-
-                Text('Login', 
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,),
-
-
-              SizedBox(height: 16,),
-
-              TextFormField(
-                controller: _emailController,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.email),
-                  labelText: 'Email',
-                  border: OutlineInputBorder()
+                Text(
+                  'Login',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
                 ),
 
-                validator: (value) {
-                  if(value==null || value.isEmpty ){
-                    return 'Enter your email';
-                  }
-                  if (!value.contains('@')) {
-                    return 'Enter a valid email';
-                  }
-                  return null;
-                },
-                keyboardType: TextInputType.emailAddress,
-              ),
+                SizedBox(height: 16),
 
-              SizedBox(height: 16,),
+                TextFormField(
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.email),
+                    labelText: 'Email',
+                    border: OutlineInputBorder(),
+                  ),
 
-              TextFormField(
-                controller: _passwordController,
-                decoration: InputDecoration(
-                  labelText:  'Password',
-                  prefixIcon: Icon(Icons.lock_outline),
-                  border: OutlineInputBorder(),
-                  suffixIcon: IconButton(onPressed: (){
-                    setState(() {
-                      _hidePassword = !_hidePassword;
-                    });
-                  }, 
-                  icon: Icon(
-                    _hidePassword 
-                    ? Icons.visibility_outlined 
-                    : Icons.visibility_off_outlined))
-                ),
-                validator: (value) {
-                  if(value == null || value.isEmpty) {
-                    return 'Enter your password';
-                  }
-                  return null;
-                },
-                obscureText: _hidePassword,
-              ),
-
-
-              SizedBox(height: 24,),
-
-              ElevatedButton(onPressed: (){
-                if (_loginFormKey.currentState!.validate()){
-
-                  //perform login and navigate to homescreen
-                }
-              }, 
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.deepPurple,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Enter your email';
+                    }
+                    if (!value.contains('@')) {
+                      return 'Enter a valid email';
+                    }
+                    return null;
+                  },
+                  keyboardType: TextInputType.emailAddress,
                 ),
 
-              ),
-              child: Text('Login',
-              style: TextStyle(color: Colors.white),),
-               ),
+                SizedBox(height: 16),
 
-              SizedBox(height: 16,),
+                TextFormField(
+                  controller: _passwordController,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    prefixIcon: Icon(Icons.lock_outline),
+                    border: OutlineInputBorder(),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _hidePassword = !_hidePassword;
+                        });
+                      },
+                      icon: Icon(
+                        _hidePassword
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                      ),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Enter your password';
+                    }
+                    return null;
+                  },
+                  obscureText: _hidePassword,
+                ),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Not yet registered? '),
-                  TextButton(onPressed: (){}, child: Text('Sign Up')),
-                ],
-              )
+                SizedBox(height: 24),
 
-              ],)),
-        )),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_loginFormKey.currentState!.validate()) {
+                      //perform login and navigate to homescreen
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepPurple,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: Text('Login', style: TextStyle(color: Colors.white)),
+                ),
+
+                SizedBox(height: 16),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Not yet registered? '),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(context
+                        ,MaterialPageRoute(builder: (context) => SignupScreen()));
+                      }, child: Text('Sign Up')),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
+
+// @override
+// void dispose(){
+//   _emailController.dispose();
+//   _passwordController.dispose();
+//   _hidePassword.dispose();
+
+// }
