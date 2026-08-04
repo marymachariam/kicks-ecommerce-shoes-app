@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kicks/screens/product_card.dart';
+
 
 class HomeScreen extends StatefulWidget{
   const HomeScreen({super.key});
@@ -49,7 +51,14 @@ void _onTabClicked(int index){
 class _HomeTab extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text('Home'));
+    return ListView.builder(
+      itemCount: dummyProducts.length,
+      itemBuilder: (context, index) {
+        final currentProduct = dummyProducts[index];
+        return ProductCard(product: currentProduct);
+      },
+
+    );
    
   }
 }
@@ -65,6 +74,5 @@ class _ProfileTab extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Center(child: Text('Profile'));
-   
   }
 }
