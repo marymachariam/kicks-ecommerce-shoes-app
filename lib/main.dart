@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kicks/screens/home_screen.dart';
 import 'package:kicks/screens/login_screen.dart';
 import 'package:kicks/screens/signup_screen.dart';
 
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: LoginScreen(),
+      home: HomeScreen(),
     );
   }
 }
