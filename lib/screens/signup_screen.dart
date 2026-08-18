@@ -30,7 +30,6 @@ class _SignupScreenState extends State<SignupScreen> {
             key: _signupFormKey,
             child: Column(
               children: [
-                //first name
                 TextFormField(
                   controller: _firstNameController,
                   decoration: InputDecoration(
@@ -48,13 +47,12 @@ class _SignupScreenState extends State<SignupScreen> {
 
                 SizedBox(height: 24),
 
-                //last name
                 TextFormField(
                   controller: _lastNameController,
                   decoration: InputDecoration(
                     labelText: 'Last name',
                     prefixIcon: Icon(Icons.person_2_outlined),
-                     border: OutlineInputBorder(),
+                    border: OutlineInputBorder(),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -65,7 +63,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
 
                 SizedBox(height: 24),
-                //email
+
                 TextFormField(
                   controller: _emailController,
                   decoration: InputDecoration(
@@ -73,7 +71,6 @@ class _SignupScreenState extends State<SignupScreen> {
                     labelText: 'Email',
                     border: OutlineInputBorder(),
                   ),
-
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Enter your email';
@@ -88,7 +85,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
                 SizedBox(height: 24),
 
-                //password
                 TextFormField(
                   controller: _passwordController,
                   decoration: InputDecoration(
@@ -119,7 +115,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
                 SizedBox(height: 24),
 
-                //confirm password
                 TextFormField(
                   controller: _confirmPasswordController,
                   decoration: InputDecoration(
@@ -142,6 +137,9 @@ class _SignupScreenState extends State<SignupScreen> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Enter your password';
+                    }
+                    if (value != _passwordController.text) {
+                      return 'Passwords do not match';
                     }
                     return null;
                   },
@@ -171,7 +169,12 @@ class _SignupScreenState extends State<SignupScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text('Already have Account? '),
-                    TextButton(onPressed: () {}, child: Text('Login')),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text('Login'),
+                    ),
                   ],
                 ),
               ],
@@ -181,16 +184,14 @@ class _SignupScreenState extends State<SignupScreen> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
 }
-
-// @override
-// void dispose(){
-//   _firstNameController.dispose();
-//   _lastNameController.dispose();
-//   _emailController.dispose();
-//   _passwordController.dispose();
-//   _confirmPasswordController();
-//   _hidePassword.dispose();
-//   _hideConfirmPassword();
-
-// }

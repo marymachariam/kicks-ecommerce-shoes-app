@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:kicks/screens/signup_screen.dart';
+import 'package:kicks/screens/home_screen.dart';
+import 'package:kicks/services/auth_api.dart';
+import 'package:kicks/view_model/auth_viewmodel.dart'; // Make sure this path is correct
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -21,31 +25,30 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.all(30),
+          padding: const EdgeInsets.all(30),
           child: Form(
             key: _loginFormKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Image.asset("assets/images/logo.png", width: 160, height: 160),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
 
-                Text(
+                const Text(
                   'Login',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
 
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
 
                 TextFormField(
                   controller: _emailController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.email),
                     labelText: 'Email',
                     border: OutlineInputBorder(),
                   ),
-
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Enter your email';
@@ -58,14 +61,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   keyboardType: TextInputType.emailAddress,
                 ),
 
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
 
                 TextFormField(
                   controller: _passwordController,
                   decoration: InputDecoration(
                     labelText: 'Password',
-                    prefixIcon: Icon(Icons.lock_outline),
-                    border: OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.lock_outline),
+                    border: const OutlineInputBorder(),
                     suffixIcon: IconButton(
                       onPressed: () {
                         setState(() {
@@ -88,34 +91,71 @@ class _LoginScreenState extends State<LoginScreen> {
                   obscureText: _hidePassword,
                 ),
 
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
 
-                ElevatedButton(
-                  onPressed: () {
-                    if (_loginFormKey.currentState!.validate()) {
-                      //perform login and navigate to homescreen
-                    }
+                Consumer<AuthViewmodel>(
+                  builder: (context, authViewModel, child) {
+                    return ElevatedButton(
+                      onPressed: () async {
+                        if (_loginFormKey.currentState!.validate()) {
+                          bool success = await authViewModel.login(
+                            _emailController.text,
+                            _passwordController.text,
+                          );
+
+                          if (!mounted) return;
+
+                          if (success) {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const HomeScreen(),
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  authViewModel.errorMessage ?? 'Login failed',
+                                ),
+                              ),
+                            );
+                          }
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.deepPurple,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: authViewModel.isLoading
+                      ? CircularProgressIndicator() : 
+                       const Text(
+                        'Login',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    );
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurple,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: Text('Login', style: TextStyle(color: Colors.white)),
                 ),
 
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Not yet registered? '),
+                    const Text('Not yet registered? '),
                     TextButton(
                       onPressed: () {
-                        Navigator.push(context
-                        ,MaterialPageRoute(builder: (context) => SignupScreen()));
-                      }, child: Text('Sign Up')),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SignupScreen(),
+                          ),
+                        );
+                      },
+                      child: const Text('Sign Up'),
+                    ),
                   ],
                 ),
               ],
@@ -125,12 +165,11 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 }
-
-// @override
-// void dispose(){
-//   _emailController.dispose();
-//   _passwordController.dispose();
-//   _hidePassword.dispose();
-
-// }

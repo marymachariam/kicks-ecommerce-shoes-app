@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:kicks/model/cart.dart';
-import 'package:kicks/model/product.dart';
-import 'package:provider/provider.dart';
+import 'package:kicks/model/cart_item.dart';
 
-class ProductCard extends StatelessWidget {
-  final Product product;
+class CartCard extends StatelessWidget {
+  final CartItem cartItem;
+  final VoidCallback increment;
+  final VoidCallback decrement;
 
-  const ProductCard({super.key, required this.product});
+  const CartCard({
+    super.key,
+    required this.cartItem,
+    required this.increment,
+    required this.decrement,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +23,7 @@ class ProductCard extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.network(product.imageUrl, width: 120, height: 120),
+              child: Image.network(cartItem.product.imageUrl, width: 60, height: 60),
             ),
             SizedBox(width: 12),
             Expanded(
@@ -26,24 +31,23 @@ class ProductCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    product.name,
+                    cartItem.product.name,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 8),
-                  Text(product.description),
                   SizedBox(height: 8),
                   Row(
                     children: [
                       Text(
-                        "KES ${product.price}",
+                        "KES ${cartItem.itemTotal}",
                         style: TextStyle(color: Color.fromARGB(207, 46, 65, 232)),
                       ),
                       Spacer(flex: 1),
-                      IconButton(
-                        onPressed: () {
-                          Provider.of<CartModel>(context, listen: false).addItem(product);
-                        },
-                        icon: Icon(Icons.shopping_cart_outlined, size: 20),
+                      Row(
+                        children: [
+                          IconButton(onPressed: decrement, icon: Icon(Icons.remove)),
+                          Text(cartItem.quantity.toString()),
+                          IconButton(onPressed: increment, icon: Icon(Icons.add)),
+                        ],
                       ),
                     ],
                   ),
